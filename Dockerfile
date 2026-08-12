@@ -1,9 +1,9 @@
 FROM python:3.10-slim
 
-# Set non-interactive mode for apt
+# Prevent interactive prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Update package list and install system dependencies required by WeasyPrint
+# Install system dependencies for WeasyPrint
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     python3-dev \
@@ -21,13 +21,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-# Copy requirements and install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy remaining project files
 COPY . .
 
-# Expose port and start Streamlit
 EXPOSE 8501
+
 CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
