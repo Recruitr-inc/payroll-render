@@ -1,6 +1,9 @@
 FROM python:3.10-slim
 
-# Install system dependencies required by WeasyPrint and Pandas
+# Prevent interactive prompts during apt installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install WeasyPrint and system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     python3-dev \
@@ -25,8 +28,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application files
 COPY . .
 
-# Expose Streamlit's default port
+# Expose port and start Streamlit
 EXPOSE 8501
-
-# Run Streamlit on container startup
 CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
